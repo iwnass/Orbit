@@ -23,16 +23,24 @@
     "appId": "com.orbit.app",
     "productName": "Orbit",
     "directories": {
-      "output": "dist"
+      "output": "dist",
+      "buildResources": "public"
     },
     "files": [
       "build/**/*",
       "electron/**/*",
+      "node_modules/**/*",
       "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "electron",
+        "to": "electron",
+        "filter": ["**/*"]
+      }
     ],
     "win": {
       "target": ["nsis"],
-      "icon": "public/icon.ico",
       "publisherName": "iwnass"
     },
     "nsis": {
