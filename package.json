@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Local-first journal and productivity desktop app",
   "author": "iwnass",
-  "main": "electron/main.js",
-  "homepage": "https://github.com/iwnass/Orbit",
+  "main": "build/electron.js",
+  "homepage": "./",
   "repository": {
     "type": "git",
     "url": "https://github.com/iwnass/Orbit.git"
@@ -12,8 +12,9 @@
   "scripts": {
     "start": "concurrently \"npm run start:react\" \"wait-on http://localhost:3000 && npm run start:electron\"",
     "start:react": "cross-env BROWSER=none react-scripts start",
-    "start:electron": "electron .",
-    "build": "react-scripts build",
+    "start:electron": "electron . --electron-main=electron/main.js",
+    "build": "react-scripts build && npm run copy-electron",
+    "copy-electron": "node -e \"require('fs').cpSync('electron', 'build/electron', {recursive: true})\" && node -e \"require('fs').copyFileSync('electron/main.js', 'build/electron.js')\" && node -e \"require('fs').copyFileSync('electron/preload.js', 'build/preload.js')\"",
     "build:electron": "npm run build && electron-builder",
     "build:win": "npm run build && electron-builder --win",
     "dist": "npm run build && electron-builder --win --x64",
@@ -23,21 +24,12 @@
     "appId": "com.orbit.app",
     "productName": "Orbit",
     "directories": {
-      "output": "dist",
-      "buildResources": "public"
+      "output": "dist"
     },
     "files": [
       "build/**/*",
-      "electron/**/*",
       "node_modules/**/*",
       "package.json"
-    ],
-    "extraResources": [
-      {
-        "from": "electron",
-        "to": "electron",
-        "filter": ["**/*"]
-      }
     ],
     "win": {
       "target": ["nsis"],
