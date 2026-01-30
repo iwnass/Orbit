@@ -36,7 +36,7 @@ autoUpdater.on('download-progress', (progressObj) => {
 // Enable Discord RPC if available
 try {
   const DiscordRPC = require('discord-rpc');
-  const clientId = '1466265180953645243'; 
+  const clientId = 'YOUR_DISCORD_CLIENT_ID'; // Replace with your Discord app client ID
   discordRPC = new DiscordRPC.Client({ transport: 'ipc' });
   
   discordRPC.on('ready', () => {
@@ -84,10 +84,11 @@ function createWindow() {
 
   if (isDev) {
     mainWindow.loadURL('http://localhost:3000');
-    // Dev tools disabled - comment out the line below to enable if needed
-    // mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools();
   } else {
     mainWindow.loadFile(path.join(__dirname, '../build/index.html'));
+    // Temporarily enable dev tools in production for debugging
+    mainWindow.webContents.openDevTools();
   }
 
   mainWindow.on('closed', () => {
