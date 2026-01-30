@@ -6,10 +6,37 @@ const { autoUpdater } = require('electron-updater');
 let mainWindow;
 let discordRPC = null;
 
+// Configure auto-updater
+autoUpdater.autoDownload = false;
+autoUpdater.autoInstallOnAppQuit = true;
+
+// Auto-updater events
+autoUpdater.on('update-available', (info) => {
+  console.log('Update available:', info);
+  if (mainWindow && mainWindow.webContents) {
+    mainWindow.webContents.send('update-available', info);
+  }
+});
+
+autoUpdater.on('update-downloaded', (info) => {
+  console.log('Update downloaded:', info);
+  if (mainWindow && mainWindow.webContents) {
+    mainWindow.webContents.send('update-downloaded', info);
+  }
+});
+
+autoUpdater.on('error', (err) => {
+  console.error('Update error:', err);
+});
+
+autoUpdater.on('download-progress', (progressObj) => {
+  console.log('Download progress:', progressObj.percent);
+});
+
 // Enable Discord RPC if available
 try {
   const DiscordRPC = require('discord-rpc');
-  const clientId = '1466265180953645243'; // Replace with your Discord app client ID
+  const clientId = '1466265180953645243'; 
   discordRPC = new DiscordRPC.Client({ transport: 'ipc' });
   
   discordRPC.on('ready', () => {
@@ -66,13 +93,6 @@ function createWindow() {
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
-
-  // Check for updates after window is ready
-  if (!isDev) {
-    mainWindow.webContents.on('did-finish-load', () => {
-      autoUpdater.checkForUpdatesAndNotify();
-    });
-  }
 }
 
 app.whenReady().then(() => {
@@ -84,14 +104,15 @@ app.whenReady().then(() => {
     }
   });
 
-  // Auto-updater events
-  autoUpdater.on('update-available', () => {
-    mainWindow.webContents.send('update-available');
-  });
-
-  autoUpdater.on('update-downloaded', () => {
-    mainWindow.webContents.send('update-downloaded');
-  });
+  // Check for updates when app is ready (only in production)
+  if (!app.isPackaged) {
+    console.log('Development mode - skipping update check');
+  } else {
+    console.log('Checking for updates...');
+    setTimeout(() => {
+      autoUpdater.checkForUpdates();
+    }, 3000); // Wait 3 seconds after app loads
+  }
 });
 
 app.on('window-all-closed', () => {
@@ -163,13 +184,16 @@ ipcMain.on('discord-activity', (event, details) => {
 
 // Auto-updater handlers
 ipcMain.on('check-for-updates', () => {
+  console.log('Manual check for updates requested');
   autoUpdater.checkForUpdates();
 });
 
 ipcMain.on('download-update', () => {
+  console.log('Download update requested');
   autoUpdater.downloadUpdate();
 });
 
 ipcMain.on('install-update', () => {
+  console.log('Install update requested - restarting app');
   autoUpdater.quitAndInstall();
 });
