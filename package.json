@@ -1,6 +1,6 @@
 {
   "name": "orbit-app",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Local-first journal and productivity desktop app",
   "author": "iwnass",
   "main": "build/electron.js",

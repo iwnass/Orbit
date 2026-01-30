@@ -17,14 +17,26 @@ function UpdateNotification() {
   }, []);
 
   const handleDownload = () => {
+    console.log('Download button clicked!');
+    console.log('window.electron exists?', !!window.electron);
+    console.log('window.electron.downloadUpdate exists?', !!window.electron?.downloadUpdate);
+    
     if (window.electron) {
+      console.log('Calling downloadUpdate...');
       window.electron.downloadUpdate();
+      console.log('downloadUpdate called');
+    } else {
+      console.error('window.electron not available!');
     }
   };
 
   const handleInstall = () => {
+    console.log('Install button clicked!');
     if (window.electron) {
+      console.log('Calling installUpdate...');
       window.electron.installUpdate();
+    } else {
+      console.error('window.electron not available!');
     }
   };
 
