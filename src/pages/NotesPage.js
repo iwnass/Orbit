@@ -3,7 +3,8 @@ import storageService from '../services/storage';
 
 const CATEGORIES = {
   personal: { name: 'Personal', icon: '👤' },
-  work: { name: 'Work/School', icon: '💼' },
+  school: { name: 'School', icon: '📚'},
+  work: { name: 'Work', icon: '💼' },
   ideas: { name: 'Ideas', icon: '💡' },
   random: { name: 'Random', icon: '🎲' }
 };
