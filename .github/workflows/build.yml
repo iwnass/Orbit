@@ -24,18 +24,20 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build app
+      - name: Build React app
         run: npm run build
 
-      - name: Build installer
-        run: npx electron-builder --win --x64
+      - name: Build Electron installer (without publish)
+        run: npx electron-builder --win --x64 --publish never
 
-      - name: Create Release
+      - name: Create Release and Upload Assets
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            dist/*.exe
-            dist/*.blockmap
-            dist/*.yml
+            dist/Orbit Setup 1.0.0.exe
+            dist/Orbit-Setup-1.0.0.exe.blockmap
+            dist/latest.yml
+          draft: false
+          prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
