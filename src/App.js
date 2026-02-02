@@ -4,13 +4,12 @@ import JournalPage from './pages/JournalPage';
 import NotesPage from './pages/NotesPage';
 import CalendarPage from './pages/CalendarPage';
 import GoalsPage from './pages/GoalsPage';
-import UpdateNotification from './components/UpdateNotification';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('today');
 
   useEffect(() => {
-    // Set Discord activity based on current page
+    // Discord Activity per Page :)
     const activityMap = {
       today: 'Writing in Today\'s Journal',
       journal: 'Browsing Past Entries',
@@ -43,8 +42,6 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
-      <UpdateNotification />
-      
       {/* Sidebar */}
       <nav className="w-64 bg-white border-r border-gray-200 flex flex-col">
         <div className="p-6">
@@ -111,7 +108,7 @@ function App() {
 
         <div className="p-4 border-t border-gray-200">
           <p className="text-xs text-gray-500 text-center">
-            v1.0.0
+            v1.0.8
           </p>
         </div>
       </nav>

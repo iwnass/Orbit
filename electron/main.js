@@ -7,22 +7,20 @@ let mainWindow;
 let discordRPC = null;
 
 // Configure auto-updater
-autoUpdater.autoDownload = false;
-autoUpdater.autoInstallOnAppQuit = true;
+autoUpdater.autoDownload = true; // Auto download updates
+autoUpdater.autoInstallOnAppQuit = true; // Auto install on quit
 
-// Auto-updater events
-autoUpdater.on('update-available', (info) => {
-  console.log('Update available:', info);
-  if (mainWindow && mainWindow.webContents) {
-    mainWindow.webContents.send('update-available', info);
-  }
+// Auto-updater events for logging
+autoUpdater.on('checking-for-update', () => {
+  console.log('Checking for updates...');
 });
 
-autoUpdater.on('update-downloaded', (info) => {
-  console.log('Update downloaded:', info);
-  if (mainWindow && mainWindow.webContents) {
-    mainWindow.webContents.send('update-downloaded', info);
-  }
+autoUpdater.on('update-available', (info) => {
+  console.log('Update available:', info);
+});
+
+autoUpdater.on('update-not-available', (info) => {
+  console.log('Update not available:', info);
 });
 
 autoUpdater.on('error', (err) => {
@@ -30,13 +28,18 @@ autoUpdater.on('error', (err) => {
 });
 
 autoUpdater.on('download-progress', (progressObj) => {
-  console.log('Download progress:', progressObj.percent);
+  console.log('Download progress:', Math.round(progressObj.percent) + '%');
+});
+
+autoUpdater.on('update-downloaded', (info) => {
+  console.log('Update downloaded:', info);
+  // Electron will show a notification automatically
 });
 
 // Enable Discord RPC if available
 try {
   const DiscordRPC = require('discord-rpc');
-  const clientId = 'YOUR_DISCORD_CLIENT_ID'; // Replace with your Discord app client ID
+  const clientId = '1466265180953645243'; // Replace with your Discord app client ID
   discordRPC = new DiscordRPC.Client({ transport: 'ipc' });
   
   discordRPC.on('ready', () => {
@@ -84,11 +87,10 @@ function createWindow() {
 
   if (isDev) {
     mainWindow.loadURL('http://localhost:3000');
-    mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools(); // Open in dev mode
   } else {
     mainWindow.loadFile(path.join(__dirname, '../build/index.html'));
-    // Temporarily enable dev tools in production for debugging
-    mainWindow.webContents.openDevTools();
+    // Dev tools available via Ctrl+Shift+I but won't open automatically
   }
 
   mainWindow.on('closed', () => {
@@ -111,7 +113,7 @@ app.whenReady().then(() => {
   } else {
     console.log('Checking for updates...');
     setTimeout(() => {
-      autoUpdater.checkForUpdates();
+      autoUpdater.checkForUpdatesAndNotify();
     }, 3000); // Wait 3 seconds after app loads
   }
 });

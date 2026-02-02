@@ -65,10 +65,11 @@ function GoalsPage() {
   const handleUpdateAmount = async (goalId, newAmount) => {
     const updatedGoals = goals.map(g => {
       if (g.id === goalId) {
+        const updatedAmount = g.currentAmount + newAmount; // Add to current amount
         return {
           ...g,
-          currentAmount: newAmount,
-          history: [...(g.history || []), { date: new Date().toISOString(), amount: newAmount }]
+          currentAmount: updatedAmount,
+          history: [...(g.history || []), { date: new Date().toISOString(), amount: updatedAmount }]
         };
       }
       return g;
@@ -199,7 +200,7 @@ function GoalsPage() {
               <div className="flex gap-2">
                 <input
                   type="number"
-                  placeholder="Update amount"
+                  placeholder="Add amount (e.g., 100)"
                   className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   onKeyPress={(e) => {
                     if (e.key === 'Enter') {
@@ -216,7 +217,7 @@ function GoalsPage() {
                   }}
                   className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
                 >
-                  Update
+                  Add
                 </button>
               </div>
 
