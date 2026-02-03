@@ -6,7 +6,7 @@ const CATEGORIES = {
   school: { name: 'School', icon: '📚'},
   work: { name: 'Work', icon: '💼' },
   ideas: { name: 'Ideas', icon: '💡' },
-  random: { name: 'Random', icon: '🎲' },
+  // random: { name: 'Random', icon: '🎲' },
   projects: { name: 'Projects', icon: '💻'}
 };
 
